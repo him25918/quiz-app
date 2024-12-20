@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login page</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+    <div class="login">
+        <div class="heading">Master Quiz
+        <p>A place to test your knowledge.</p>
+        </div>
+        <div class="sub-heading">Login Page</div>
+        <form id="loginForm">
+            <div class="fills"> 
+                <label for="username">Username : </label>
+                <input type="text" id="username">
+            </div>
+            <div class="fills">
+                <label for="password">Password :</label>
+                <input type="password" id="password">
+            </div>
+            <button type="submit" class="btn">login</button>
+        </form>
+        <div id="msg" class=""></div>
+        <div class="bottom">
+            <span>Don't have a account </span><a href="register.html"><button class="btn reg">Register</button></a>
+        </div>
+    </div>
+</div>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(e){
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const msg = document.getElementById("msg");
+
+            if(!username || !password){
+                msg.textContent = "Please fill up all the details";
+                msg.classList.toggle("error");
+                return;
+            }
+            const loginData = {
+                "email" : username,
+                "password" : password
+            };
+
+            try{
+            const response = await fetch('http://localhost:8080/cusLogin',{
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify(loginData),
+            })
+            if(!response.ok){
+                msg.textContent = "No such user found, Enter the details Correct!!";
+                msg.classList.toggle("error");
+            }
+            const responseJson = await response.json();
+            localStorage.setItem("user",JSON.stringify(responseJson));
+            localStorage.setItem("pass",password);
+            msg.textContent = "User logged in Successfully";
+            msg.classList.toggle("success");
+            window.location.replace("index.html");
+        }catch(error){
+            msg.textContent = "An Error Occured " + error;
+            msg.classList.toggle("error");
+            console.error('Error :', error);
+        }
+
+        })
+            
+                
+    </script>
+</body>
+</html>

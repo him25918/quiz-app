@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="container">
+    <div class="register">
+        <div class="heading">Master Quiz
+            <p>A place to test your knowledge.</p>
+        </div>
+        <div class="sub-heading">Registration Page</div>
+        <form id="myForm">
+            <div class="fills">
+            <label for="name">Name : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input type="text" id="name">
+            </div>
+            <div class="fills">
+            <label for="email">Email : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input type="email" id="email">
+            </div>
+            <div class="fills">
+            <label for="password">password : </label>
+            <input type="text" id="password" >
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div id="msg" class=""></div>
+
+        <div class="bottom">
+        <span>Already have a account&nbsp;&nbsp; </span> <a href="login.html"><button class="btn">Login</button></a>
+        </div>
+</div>
+</div>
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function (e){
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+            const msg = document.getElementById("msg");
+
+            if(!name || !email || !pass){
+                msg.textContent = "Please fill up All the Details";
+                return;
+            }
+            const user = {
+                "name" : name,
+                "email" : email,
+                "password" : pass
+            };
+
+            fetch('http://localhost:8080/register',{
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify(user),
+            })
+            .then(response => {
+                if(response.ok){
+                    msg.textContent = "User Registered Successfully";
+                    msg.classList.toggle("success");
+                }else{
+                    msg.textContent = "Please fill up the details Correctly";
+                    msg.classList.toggle("error");
+                }
+            })
+            .catch(error =>{
+                msg.textContent = "An Error Occured  " + error;
+                msg.classList.toggle("error");
+                console.error('Error: ', error);
+            });
+        });
+    </script>
+</body>
+</html>
